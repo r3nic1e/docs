@@ -34,13 +34,14 @@ jobs:
               repo: context.repo.repo,
               ref: "heads/" + process.env.VERSION,
             })
+        continue-on-error: true
         env:
           VERSION: ${{ steps.parse-version.outputs.version }}
 
       - name: Create branch and PR for new version
         id: create-version
         uses: actions/github-script@v5
-        if: failure()
+        if: ${{ steps.find-branch.outcome == "failure" }}
         with:
           github-token: ${{ github.token }}
           script: |
