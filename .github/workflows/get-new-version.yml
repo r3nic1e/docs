@@ -56,25 +56,19 @@ jobs:
               commit_sha: (await mainBranch).data.object.sha,
             })
 
+            const newCommit = github.rest.git.createCommit({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              message: "chore: empty commit for " + process.env.VERSION + " version",
+              tree: (await lastMainCommit).data.tree.sha,
+              parents: [(await lastMainCommit).data.sha],
+            })
+
             await github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: "refs/heads/" + process.env.VERSION,
-              sha: (await mainBranch).data.object.sha,
-            })
-
-            const tree = github.rest.git.createTree({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              tree: [],
-              base_tree: (await lastMainCommit).data.tree.sha,
-            })
-
-            await github.rest.git.createCommit({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              message: "chore: empty commit for " + process.env.VERSION + " version",
-              tree: await tree,
+              sha: (await newCommit).data.sha,
             })
 
             await github.rest.pulls.create({
