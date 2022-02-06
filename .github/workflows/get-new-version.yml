@@ -76,7 +76,7 @@ jobs:
               repo: context.repo.repo,
               head: process.env.VERSION,
               base: "main",
-              draft: true,
+              title: "Generate docs for " + process.env.VERSION + " version"
             })
         env:
           VERSION: ${{ steps.parse-version.outputs.version }}
