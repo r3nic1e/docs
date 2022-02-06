@@ -44,39 +44,37 @@ jobs:
         with:
           github-token: ${{ github.token }}
           script: |
-            const mainBranch = await github.rest.git.getRef({
+            const mainBranch = github.rest.git.getRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: "heads/main",
             })
 
-            const lastMainCommit = await github.rest.git.getCommit({
+            const lastMainCommit = github.rest.git.getCommit({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              commit_sha: mainBranch.data.object.sha,
+              commit_sha: (await mainBranch).data.object.sha,
             })
-
-            console.log(lastMainCommit)
 
             await github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: "refs/heads/" + process.env.VERSION,
-              sha: mainBranch.data.object.sha,
+              sha: (await mainBranch).data.object.sha,
             })
 
-            const tree = await github.rest.git.createTree({
+            const tree = github.rest.git.createTree({
               owner: context.repo.owner,
               repo: context.repo.repo,
               tree: [],
-              base_tree: lastMainCommit.object.tree.sha,
+              base_tree: (await lastMainCommit).data.tree.sha,
             })
 
             await github.rest.git.createCommit({
               owner: context.repo.owner,
               repo: context.repo.repo,
               message: "chore: empty commit for " + process.env.VERSION + " version",
-              tree: tree,
+              tree: await tree,
             })
 
             await github.rest.pulls.create({
