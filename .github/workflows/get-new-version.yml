@@ -56,6 +56,8 @@ jobs:
               commit_sha: mainBranch.data.object.sha,
             })
 
+            console.log(lastMainCommit)
+
             await github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
