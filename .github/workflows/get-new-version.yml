@@ -28,7 +28,7 @@ jobs:
             github.rest.git.getRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: "refs/heads/" + process.env.VERSION,
+              ref: "heads/" + process.env.VERSION,
             })
         env:
           VERSION: ${{ steps.parse-version.outputs.version }}
@@ -43,13 +43,13 @@ jobs:
             const mainBranch = await github.rest.git.getRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: "refs/heads/main",
+              ref: "heads/main",
             })
 
             await github.rest.git.createRef({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              ref: "refs/heads/" + process.env.VERSION,
+              ref: "heads/" + process.env.VERSION,
               sha: mainBranch.object.sha
             })
 
