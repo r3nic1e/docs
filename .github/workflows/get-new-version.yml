@@ -45,6 +45,7 @@ jobs:
               repo: context.repo.repo,
               ref: "heads/main",
             })
+            console.log(mainBranch)
 
             await github.rest.git.createRef({
               owner: context.repo.owner,
