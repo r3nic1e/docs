@@ -51,7 +51,7 @@ jobs:
               owner: context.repo.owner,
               repo: context.repo.repo,
               ref: "heads/" + process.env.VERSION,
-              sha: mainBranch.object.sha
+              sha: mainBranch.data.object.sha
             })
 
             await github.rest.pulls.create({
